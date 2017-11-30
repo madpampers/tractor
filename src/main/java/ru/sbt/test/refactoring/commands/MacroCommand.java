@@ -2,10 +2,10 @@ package ru.sbt.test.refactoring.commands;
 
 import java.util.List;
 
-public class ForwardThenBackwardMacroCommand implements Command{
+public class MacroCommand implements Command {
     private List<Command> commands;
 
-    public ForwardThenBackwardMacroCommand(List<Command> commands) {
+    public MacroCommand(List<Command> commands) {
         this.commands = commands;
     }
 

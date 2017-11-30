@@ -1,6 +1,14 @@
 package ru.sbt.test.refactoring;
 
 import junit.framework.TestCase;
+import ru.sbt.test.refactoring.commands.Command;
+import ru.sbt.test.refactoring.commands.ForwardMoveCommand;
+import ru.sbt.test.refactoring.commands.MacroCommand;
+import ru.sbt.test.refactoring.commands.TurnClockwiseCommand;
+import ru.sbt.test.refactoring.exceptions.InDitchException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ben
@@ -8,79 +16,83 @@ import junit.framework.TestCase;
 public class TractorTest extends TestCase {
 
     public void testShouldMoveForward() {
-        Tractor tractor = new Tractor();
-        tractor.move("F");
-        assertEquals(0, tractor.getPositionX());
-        assertEquals(1, tractor.getPositionY());
+        Tractor tractor = new Tractor(new MovementArea(5, 5));
+        Command forwardMoveCommand = new ForwardMoveCommand(tractor);
+        forwardMoveCommand.execute();
+        assertEquals(0, tractor.getPosition().getX());
+        assertEquals(1, tractor.getPosition().getY());
     }
 
     public void testShouldTurn() {
-        Tractor tractor = new Tractor();
-        tractor.move("T");
+        Tractor tractor = new Tractor(new MovementArea(5, 5));
+        Command turnCommand = new TurnClockwiseCommand(tractor);
+        turnCommand.execute();
         assertEquals(Orientation.EAST, tractor.getOrientation());
-        tractor.move("T");
+        turnCommand.execute();
         assertEquals(Orientation.SOUTH, tractor.getOrientation());
-        tractor.move("T");
+        turnCommand.execute();
         assertEquals(Orientation.WEST, tractor.getOrientation());
-        tractor.move("T");
+        turnCommand.execute();
         assertEquals(Orientation.NORTH, tractor.getOrientation());
     }
 
     public void testShouldTurnAndMoveInTheRightDirection() {
-        Tractor tractor = new Tractor();
-        tractor.move("T");
-        tractor.move("F");
-        assertEquals(1, tractor.getPositionX());
-        assertEquals(0, tractor.getPositionY());
-        tractor.move("T");
-        tractor.move("F");
-        assertEquals(1, tractor.getPositionX());
-        assertEquals(-1, tractor.getPositionY());
-        tractor.move("T");
-        tractor.move("F");
-        assertEquals(0, tractor.getPositionX());
-        assertEquals(-1, tractor.getPositionY());
-        tractor.move("T");
-        tractor.move("F");
-        assertEquals(0, tractor.getPositionX());
-        assertEquals(0, tractor.getPositionY());
+        Tractor tractor = new Tractor(new MovementArea(5, 5));
+        Command turnCommand = new TurnClockwiseCommand(tractor);
+        turnCommand.execute();
+        Command forwardMoveCommand = new ForwardMoveCommand(tractor);
+        forwardMoveCommand.execute();
+        assertEquals(1, tractor.getPosition().getX());
+        assertEquals(0, tractor.getPosition().getY());
+        turnCommand.execute();
+        forwardMoveCommand.execute();
+        assertEquals(1, tractor.getPosition().getX());
+        assertEquals(-1, tractor.getPosition().getY());
+        turnCommand.execute();
+        forwardMoveCommand.execute();
+        assertEquals(0, tractor.getPosition().getX());
+        assertEquals(-1, tractor.getPosition().getY());
+        turnCommand.execute();
+        forwardMoveCommand.execute();
+        assertEquals(0, tractor.getPosition().getX());
+        assertEquals(0, tractor.getPosition().getY());
     }
 
     public void testShouldThrowExceptionIfFallsOffPlateau() {
-        Tractor tractor = new Tractor();
-        tractor.move("F");
-        tractor.move("F");
-        tractor.move("F");
-        tractor.move("F");
-        tractor.move("F");
+        Tractor tractor = new Tractor(new MovementArea(5, 5));
+        Command forwardMoveCommand = new ForwardMoveCommand(tractor);
+        forwardMoveCommand.execute();
+        forwardMoveCommand.execute();
+        forwardMoveCommand.execute();
+        forwardMoveCommand.execute();
+        forwardMoveCommand.execute();
         try {
-            tractor.move("F");
+            forwardMoveCommand.execute();
             fail("Tractor was expected to fall off the plateau");
-        } catch (TractorInDitchException expected) {
+        } catch (InDitchException expected) {
         }
     }
 
-    public void testShouldBeAtStartPointWithMacroCommand() {
-        Tractor tractor = new Tractor();
-        tractor.move("M");
-        assertEquals(0, tractor.getPositionX());
-        assertEquals(0, tractor.getPositionY());
+    public void testMacroCommand() {
+        List<Command> commands = new ArrayList<Command>();
+        Tractor tractor = new Tractor(new MovementArea(5, 5));
+        commands.add(new ForwardMoveCommand(tractor));
+        commands.add(new TurnClockwiseCommand(tractor));
+        commands.add(new TurnClockwiseCommand(tractor));
+        commands.add(new ForwardMoveCommand(tractor));
+        Command command = new MacroCommand(commands);
+        command.execute();
+        assertEquals(0, tractor.getPosition().getY());
+        assertEquals(0, tractor.getPosition().getX());
     }
 
-    public void testCarRotation() {
-        AbstractFigure car = new Car();
-        car.move("T");
-        assertEquals(Orientation.SOUTH, car.getOrientation());
-    }
-
-    public void testCarSpeedMovement() {
-        AbstractFigure car = new Car();
-        car.move("F");
-        assertEquals(2, car.getPositionY());
-    }
-
-    public void testIncorrectCommands() {
-        AbstractFigure car = new Car();
-        car.move("D");
+    public void testOverloadCommands() {
+        Tractor tractor = new Tractor(new MovementArea(5, 5));
+        Command forwardCommand = new ForwardMoveCommand(tractor, 5);
+        forwardCommand.execute();
+        assertEquals(5, tractor.getPosition().getY());
+        Command turnCommand = new TurnClockwiseCommand(tractor, 5);
+        turnCommand.execute();
+        assertEquals(Orientation.EAST, tractor.getOrientation());
     }
 }

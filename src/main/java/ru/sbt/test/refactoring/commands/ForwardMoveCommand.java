@@ -1,15 +1,25 @@
 package ru.sbt.test.refactoring.commands;
 
-import ru.sbt.test.refactoring.AbstractFigure;
+import ru.sbt.test.refactoring.behaviours.interfaces.ForwardMovable;
 
-public class ForwardMoveCommand implements Command{
-    private AbstractFigure figure;
+public class ForwardMoveCommand implements Command {
+    private final ForwardMovable forwardMovable;
+    private final int distance;
 
-    ForwardMoveCommand(AbstractFigure figure) {
-        this.figure = figure;
+    public ForwardMoveCommand(ForwardMovable forwardMovable) {
+        this(forwardMovable, 1);
     }
 
+    public ForwardMoveCommand(ForwardMovable forwardMovable, int distance) {
+        this.forwardMovable = forwardMovable;
+        this.distance = distance;
+    }
+
+
+    @Override
     public void execute() {
-        figure.moveForwards();
+        for (int i = 0; i < distance; i++) {
+            forwardMovable.moveForward();
+        }
     }
 }

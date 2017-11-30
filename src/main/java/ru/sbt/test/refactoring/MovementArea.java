@@ -1,10 +1,10 @@
 package ru.sbt.test.refactoring;
 
-public class Field {
+public class MovementArea {
     private final int length;
     private final int height;
 
-    Field(int length, int height) {
+    MovementArea(int length, int height) {
         this.length = length;
         this.height = height;
     }

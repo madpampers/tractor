@@ -3,42 +3,72 @@ package ru.sbt.test.refactoring;
 public enum Orientation {
 
     NORTH(0, 1) {
-        public Orientation turnRight() {
+        @Override
+        public Orientation getRight() {
             return EAST;
         }
 
-        public Orientation turnLeft() {
+        @Override
+        public Orientation getLeft() {
             return WEST;
+        }
+
+        @Override
+        public Orientation getBack() {
+            return SOUTH;
         }
     },
 
     EAST(1, 0) {
-        public Orientation turnRight() {
+        @Override
+        public Orientation getRight() {
             return SOUTH;
         }
 
-        public Orientation turnLeft() {
+        @Override
+        public Orientation getLeft() {
             return NORTH;
         }
+
+        @Override
+        public Orientation getBack() {
+            return WEST;
+        }
+
+
     },
 
     WEST(-1, 0) {
-        public Orientation turnRight() {
+        @Override
+        public Orientation getRight() {
             return NORTH;
         }
 
-        public Orientation turnLeft() {
+        @Override
+        public Orientation getLeft() {
             return SOUTH;
+        }
+
+        @Override
+        public Orientation getBack() {
+            return EAST;
         }
     },
 
     SOUTH(0, -1) {
-        public Orientation turnRight() {
+        @Override
+        public Orientation getRight() {
             return WEST;
         }
 
-        public Orientation turnLeft() {
+        @Override
+        public Orientation getLeft() {
             return EAST;
+        }
+
+        @Override
+        public Orientation getBack() {
+            return NORTH;
         }
     };
 
@@ -58,7 +88,10 @@ public enum Orientation {
         return yDirection;
     }
 
-    public abstract Orientation turnRight();
+    public abstract Orientation getRight();
 
-    public abstract Orientation turnLeft();
+    public abstract Orientation getLeft();
+
+    public abstract Orientation getBack();
 }
+
