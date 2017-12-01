@@ -4,7 +4,7 @@ import ru.sbt.test.refactoring.behaviours.ClockwiseDirectionTurning;
 import ru.sbt.test.refactoring.behaviours.ForwardMovement;
 import ru.sbt.test.refactoring.commands.Command;
 
-public class Tractor implements MovableByCommand {
+public class Tractor implements CommandDriven {
 
     private ForwardMovement movementBehaviour;
     private ClockwiseDirectionTurning turnBehaviour;
@@ -38,6 +38,7 @@ public class Tractor implements MovableByCommand {
         return movementBehaviour.getPosition();
     }
 
+    @Override
     public void move(Command command) {
         command.execute();
     }
