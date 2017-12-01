@@ -13,8 +13,8 @@ public class Robot implements FourDirectionsMovable, ClockwiseTurnable, CounterC
     private final TwoDirectionsTurning turningBehavior;
 
     public Robot(MovementArea area) {
-        this.movementBehavior = new FourDirectionsMovement(area, Orientation.NORTH);
         this.turningBehavior = new TwoDirectionsTurning(Orientation.NORTH);
+        this.movementBehavior = new FourDirectionsMovement(area, turningBehavior);
     }
 
     public Orientation getOrientation() {
@@ -48,12 +48,10 @@ public class Robot implements FourDirectionsMovable, ClockwiseTurnable, CounterC
     @Override
     public void turnRight() {
         turningBehavior.turnRight();
-        movementBehavior.setOrientation(turningBehavior.getOrientation());
     }
 
     @Override
     public void turnLeft() {
         turningBehavior.turnLeft();
-        movementBehavior.setOrientation(turningBehavior.getOrientation());
     }
 }

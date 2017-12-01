@@ -10,91 +10,99 @@ import java.util.List;
 public class RobotTest extends TestCase {
 
     public void testShouldMoveForward() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
         Command forwardMoveCommand = new ForwardMoveCommand(robot);
-        forwardMoveCommand.execute();
+        skynet.controlRobots(forwardMoveCommand);
         assertEquals(0, robot.getPosition().getX());
         assertEquals(1, robot.getPosition().getY());
         assertEquals(Orientation.NORTH, robot.getOrientation());
     }
 
     public void testShouldMoveBack() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
         Command backwardMoveCommand = new BackwardMoveCommand(robot);
-        backwardMoveCommand.execute();
+        skynet.controlRobots(backwardMoveCommand);
         assertEquals(0, robot.getPosition().getX());
         assertEquals(-1, robot.getPosition().getY());
         assertEquals(Orientation.NORTH, robot.getOrientation());
     }
 
     public void testShouldMoveRight() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
         Command rightMoveCommand = new RightMoveCommand(robot);
-        rightMoveCommand.execute();
+        skynet.controlRobots(rightMoveCommand);
         assertEquals(1, robot.getPosition().getX());
         assertEquals(0, robot.getPosition().getY());
         assertEquals(Orientation.NORTH, robot.getOrientation());
     }
 
     public void testShouldMoveLeft() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
         Command leftMoveCommand = new LeftMoveCommand(robot);
-        leftMoveCommand.execute();
+        skynet.controlRobots(leftMoveCommand);
         assertEquals(-1, robot.getPosition().getX());
         assertEquals(0, robot.getPosition().getY());
         assertEquals(Orientation.NORTH, robot.getOrientation());
     }
 
     public void testShouldTurnRight() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
         Command turnCommand = new TurnClockwiseCommand(robot);
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.EAST, robot.getOrientation());
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.SOUTH, robot.getOrientation());
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.WEST, robot.getOrientation());
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.NORTH, robot.getOrientation());
     }
 
     public void testShouldTurnLeft() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
         Command turnCommand = new TurnCounterClockwiseCommand(robot);
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.WEST, robot.getOrientation());
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.SOUTH, robot.getOrientation());
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.EAST, robot.getOrientation());
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.NORTH, robot.getOrientation());
     }
 
     public void testShouldTurnAndMoveInTheRightDirection() {
+        Skynet skynet = new Skynet();
         Robot robot = new Robot(new MovementArea(5, 5));
-        new RightMoveCommand(robot).execute();
+        skynet.controlRobots(new RightMoveCommand(robot));
         assertEquals(1, robot.getPosition().getX());
         assertEquals(0, robot.getPosition().getY());
-        new BackwardMoveCommand(robot).execute();
+        skynet.controlRobots(new BackwardMoveCommand(robot));
         assertEquals(1, robot.getPosition().getX());
         assertEquals(-1, robot.getPosition().getY());
-        new LeftMoveCommand(robot).execute();
+        skynet.controlRobots(new LeftMoveCommand(robot));
         assertEquals(0, robot.getPosition().getX());
         assertEquals(-1, robot.getPosition().getY());
-        new ForwardMoveCommand(robot).execute();
+        skynet.controlRobots(new ForwardMoveCommand(robot));
         assertEquals(0, robot.getPosition().getX());
         assertEquals(0, robot.getPosition().getY());
     }
 
     public void testShouldThrowExceptionIfFallsOffPlateau() {
+        Skynet skynet = new Skynet();
         Robot tractor = new Robot(new MovementArea(5, 5));
         Command forwardMoveCommand = new ForwardMoveCommand(tractor);
-        forwardMoveCommand.execute();
-        forwardMoveCommand.execute();
-        forwardMoveCommand.execute();
-        forwardMoveCommand.execute();
-        forwardMoveCommand.execute();
+        skynet.controlRobots(forwardMoveCommand);
+        skynet.controlRobots(forwardMoveCommand);
+        skynet.controlRobots(forwardMoveCommand);
+        skynet.controlRobots(forwardMoveCommand);
+        skynet.controlRobots(forwardMoveCommand);
         try {
             forwardMoveCommand.execute();
             fail("Tractor was expected to fall off the plateau");
@@ -103,6 +111,7 @@ public class RobotTest extends TestCase {
     }
 
     public void testMacroCommand() {
+        Skynet skynet = new Skynet();
         List<Command> commands = new ArrayList<Command>();
         Robot robot = new Robot(new MovementArea(5, 5));
         commands.add(new ForwardMoveCommand(robot));
@@ -110,18 +119,19 @@ public class RobotTest extends TestCase {
         commands.add(new TurnCounterClockwiseCommand(robot));
         commands.add(new BackwardMoveCommand(robot));
         Command command = new MacroCommand(commands);
-        command.execute();
+        skynet.controlRobots(command);
         assertEquals(0, robot.getPosition().getY());
         assertEquals(0, robot.getPosition().getX());
     }
 
     public void testOverloadCommands() {
+        Skynet skynet = new Skynet();
         Robot tractor = new Robot(new MovementArea(5, 5));
         Command forwardCommand = new ForwardMoveCommand(tractor, 5);
-        forwardCommand.execute();
+        skynet.controlRobots(forwardCommand);
         assertEquals(5, tractor.getPosition().getY());
         Command turnCommand = new TurnClockwiseCommand(tractor, 5);
-        turnCommand.execute();
+        skynet.controlRobots(turnCommand);
         assertEquals(Orientation.EAST, tractor.getOrientation());
     }
 }

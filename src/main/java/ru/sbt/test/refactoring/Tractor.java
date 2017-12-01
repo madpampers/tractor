@@ -2,17 +2,32 @@ package ru.sbt.test.refactoring;
 
 import ru.sbt.test.refactoring.behaviours.ClockwiseDirectionTurning;
 import ru.sbt.test.refactoring.behaviours.ForwardMovement;
-import ru.sbt.test.refactoring.behaviours.interfaces.ForwardMovable;
-import ru.sbt.test.refactoring.behaviours.interfaces.ClockwiseTurnable;
+import ru.sbt.test.refactoring.commands.Command;
 
-public class Tractor implements ForwardMovable, ClockwiseTurnable {
+public class Tractor implements MovableByCommand {
 
-    private final ForwardMovement movementBehaviour;
-    private final ClockwiseDirectionTurning turnBehaviour;
+    private ForwardMovement movementBehaviour;
+    private ClockwiseDirectionTurning turnBehaviour;
 
     public Tractor(MovementArea area) {
-        this.movementBehaviour = new ForwardMovement(area, Orientation.NORTH);
         this.turnBehaviour = new ClockwiseDirectionTurning(Orientation.NORTH);
+        this.movementBehaviour = new ForwardMovement(area, turnBehaviour);
+    }
+
+    public ForwardMovement getMovementBehaviour() {
+        return movementBehaviour;
+    }
+
+    public void setMovementBehaviour(ForwardMovement movementBehaviour) {
+        this.movementBehaviour = movementBehaviour;
+    }
+
+    public ClockwiseDirectionTurning getTurnBehaviour() {
+        return turnBehaviour;
+    }
+
+    public void setTurnBehaviour(ClockwiseDirectionTurning turnBehaviour) {
+        this.turnBehaviour = turnBehaviour;
     }
 
     public Orientation getOrientation() {
@@ -23,15 +38,8 @@ public class Tractor implements ForwardMovable, ClockwiseTurnable {
         return movementBehaviour.getPosition();
     }
 
-    @Override
-    public void moveForward() {
-        movementBehaviour.moveForward();
-    }
-
-    @Override
-    public void turnRight() {
-        turnBehaviour.turnRight();
-        movementBehaviour.setOrientation(turnBehaviour.getOrientation());
+    public void move(Command command) {
+        command.execute();
     }
 }
 

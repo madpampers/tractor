@@ -1,26 +1,26 @@
 package ru.sbt.test.refactoring.behaviours;
 
 import ru.sbt.test.refactoring.MovementArea;
-import ru.sbt.test.refactoring.Orientation;
 import ru.sbt.test.refactoring.behaviours.interfaces.FourDirectionsMovable;
+import ru.sbt.test.refactoring.behaviours.interfaces.Navigator;
 
 public class FourDirectionsMovement extends ForwardMovement implements FourDirectionsMovable {
-    public FourDirectionsMovement(MovementArea area, Orientation orientation) {
-        super(area, orientation);
+    public FourDirectionsMovement(MovementArea area, Navigator navigator) {
+        super(area, navigator);
     }
 
     @Override
     public void moveBack() {
-        changePosition(orientation.getBack());
+        changePosition(navigator.getOrientation().getBack());
     }
 
     @Override
     public void moveRight() {
-        changePosition(orientation.getRight());
+        changePosition(navigator.getOrientation().getRight());
     }
 
     @Override
     public void moveLeft() {
-        changePosition(orientation.getLeft());
+        changePosition(navigator.getOrientation().getLeft());
     }
 }
